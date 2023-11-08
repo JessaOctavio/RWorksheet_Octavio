@@ -1,0 +1,61 @@
+---
+title: "RWorksheet_Octavio#4b"
+output: pdf_document
+date: "2023-11-08"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#1
+    vectorA <-c (1,2,3,4,5)
+    seroMatrix<- matrix(0,nrow=5, ncol=5)
+   
+    for (i in 1:5){
+    for (j in 1:5){
+   
+    hat <- abs(vectorA[i]-j)
+   
+    cat(hat," ")
+ }
+    cat ("\n")
+}    
+
+#2
+    for (i in 1:5){
+    hat <- rep ("*",i)
+    print(hat)
+}
+     
+#3
+    userInp <- as.numeric(readline("Enter a number to start the Fibonacci sequence: "))
+
+
+a <- 0
+b <- 1
+
+cat("Fibonacci sequence starting from", userInp, ": ")
+cat(userInp, " ")
+
+
+repeat {
+
+  nextFib <- a + b
+
+
+  if (nextFib > 500) {
+    break
+  }
+
+
+  cat(nextFib, " ")
+
+ 
+  a <- b
+  b <- nextFib
+}
+
+
+
+
