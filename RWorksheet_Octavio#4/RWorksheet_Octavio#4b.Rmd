@@ -28,34 +28,96 @@ knitr::opts_chunk$set(echo = TRUE)
     print(hat)
 }
      
-#3
-    userInp <- as.numeric(readline("Enter a number to start the Fibonacci sequence: "))
+#3 Get an input from the user to print the Fibonacci sequence starting from the 1st input up to 500. Use repeat and break statements. Write the R Scripts and its output.
+```{r} 
+   userInput <- as.integer(readline("Enter starting number for Fibonacci sequence: "))
+
+a <- userInput
+b <- 0
 
 
-a <- 0
-b <- 1
-
-cat("Fibonacci sequence starting from", userInp, ": ")
-cat(userInp, " ")
-
+cat("Fibonacci sequence starting from", userInput, ":\n")
 
 repeat {
-
-  nextFib <- a + b
-
-
-  if (nextFib > 500) {
+  
+  next_num <- a + b
+  
+  if (next_num > 500){
     break
   }
+  cat(next_num, " ")
+  a <- y
+  b <- next_num
+}  
+```
+#4 Import the dataset as shown in Figure 1 you have created previously.
+
+#4a What is the R script for importing an excel or a csv file? Display the first 6 rows of the dataset? Show your codes and its result
+```{r}
+prevData <- read.csv("householdData.csv")
+head(prevData)
+```
+
+#4b Create a subset for gender(female and male). How many observations are there in Male? How about in Female? Write the R scripts and its output.
+```{r}
+males <- prevData[prevData$Gender == "M",]
+males
+
+females <- prevData[prevData$Gender == "F",]
+females
+
+numofMale <- nrow(males)
+numofMale
+
+numofFem <- nrow(females)
+numofFem
+```
 
 
-  cat(nextFib, " ")
-
- 
-  a <- b
-  b <- nextFib
-}
 
 
 
 
+#5 The monthly income of Dela Cruz family was spent on the following:
+
+#a Create a piechart that will include labels in percentage.Add some colors and title of the chart. Write the R scripts and show its output.
+
+```{r}
+data <- c(60, 10, 5, 25)
+labels <- c("Food", "Electricity", "Savings", "Miscellaneous")
+colors <- c("orange", "skyblue", "violet", "red")
+pie(data, labels = labels, col = colors, main = "My Pie Chart")
+```
+#6 Use the iris dataset.
+
+#a Check for the structure of the dataset using the str() function. Describe what you have seen in the output.
+
+```{r}
+data("iris")
+
+species_count <- table(iris$Species)
+colors <-c("yellow", "green", "pink")
+pie(species_count, labels = levels(iris$Species), col = colors, main = "Iris Species Distribution")
+```    
+#b. Create an R object that will contain the mean of the sepal.length,sepal.width,petal.length,and petal.width. What is the R script and its result?
+```{r}
+
+
+
+
+
+
+```
+#c. Create a pie chart for the Species distribution. Add title, legends, and colors. Write the R script and its result.
+```{r}
+data("iris")
+species_count <- table(iris$Species)
+colors <- c("violet", "orange", "maroon")
+pie(species_count, labels = levels(iris$Species), col = colors, main = "Iris Species Distribution")
+legend("topright", legend = levels(iris$Species), fill = colors, title = "Species")
+```
+#d. Subset the species into setosa, versicolor, and virginica. Write the R scripts and show the last six (6) rows of each species.
+```{r}
+data(iris)
+setosa_data <- subset(iris, Species == "setosa")
+versicolor_data <- subset(iris,)
