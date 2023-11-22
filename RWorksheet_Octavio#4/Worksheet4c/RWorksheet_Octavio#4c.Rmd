@@ -1,0 +1,31 @@
+---
+title: "RWorksheet_Octavio#4c"
+output: pdf_document
+date: "2023-11-22"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#1. Use the dataset mpg
+
+#1a.Show your solutions on how to import a csv file into the environment.
+```{r}
+library(readr)
+mpg <- read_csv("mpg.csv")
+View(mpg)
+```
+
+#1b Which variables from mpg dataset are categorical?
+```{r}
+str(mpg_file)
+
+# manufacturer, model, trans, drv, fl, class variables are categorical
+```
+
+#1c. 
+```{r}
+
+```
+
