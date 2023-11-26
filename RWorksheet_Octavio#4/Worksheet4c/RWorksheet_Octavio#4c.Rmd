@@ -9,23 +9,266 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 #1. Use the dataset mpg
-
 #1a.Show your solutions on how to import a csv file into the environment.
 ```{r}
 library(readr)
 mpg <- read_csv("mpg.csv")
-View(mpg)
+head(mpg)
 ```
 
 #1b Which variables from mpg dataset are categorical?
 ```{r}
-str(mpg_file)
+str(mpg)
 
 # manufacturer, model, trans, drv, fl, class variables are categorical
 ```
 
-#1c. 
+#1c. Which are continuous variables?
 ```{r}
+summary(mpg)
+##The categorical variables are the  X, displ, year, cyl, cty, hwy are continuous variables
+```
+
+#2.1 Which manufacturer has the most models in this data set? Which model has the most variations? Show your answer.
+```{r}
+manufacturer_asTable <- table(mpg$manufacturer)
+manufacturer_most_models <- names(manufacturer_asTable)[which.max(manufacturer_asTable)]
+
+manufacturer_most_models
+# The dodge manufacturer has the most models
+
+
+model_asTable <- table(mpg$model)
+model_most_vars <- names(model_asTable)[which.max(model_asTable)]
+
+model_most_vars
+# The caravan 2wd has the most variations
+```
+#2.1a Group the manufacturers and find the unique models. Show your codes and result.
+```{r}
+library(dplyr)
+
+manufacturers_models <- data.frame(Manufacturer = mpg$manufacturer, Model = mpg$model)
+manufacturers_models
+
+unique_models <- unique(manufacturers_models)
+unique_models
+
+unique_models_factor <- factoredManufacturer <- as.factor(unique_models$Manufacturer)
+```
+#2.1 b  Graph the result by using plot() and ggplot(). Write the codes and its result.
+```{r}
+#install.packages("ggplot2")
+library(ggplot2)
+
+#install.packages("dplyr")
+library(dplyr)
+
+unique_count <- unique_models %>% 
+  count(Manufacturer)
+
+ggplot(unique_count, aes(x = Manufacturer, y = n, fill = "orange")) + 
+  geom_bar(stat = "identity") + 
+  labs(title = "Unique Models of Manufacturers",
+       x = "Manufacturer")
+```
+
+#2. Same dataset will be used. You are going to show the relationship of the modeland the manufacturer.
+
+#2a. . Group the manufacturers and find the unique models. Show your codes and result.
+```{r}
+# It creates ascatterplot of the mpg dataset with model on the x-axis and manufacturer on the y-axis.
+# In this plot,  Each point on the plot represents a specific model and its corresponding manufacturer.
+```
+2b. For you, is it useful? If not, how could you modify the data to make it more informative?
+```{r}
+#The plot may be useful for visualizing the distribution of models across manufacturers, but it could be crowded and hard to interpret if there are many models. 
+```
+#3. Plot the model and the year using ggplot(). Use only the top 20 observations. Write the codes and its results.
+```{r}
+top_20_data <- head(mpg[order(mpg$year, decreasing = TRUE), ], 20)
+ggplot(top_20_data, aes(x = year, y = model)) +
+  geom_point() +
+  labs(title = "Top 20 Observations: Model vs Year", x = "Year", y = "Model") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+4. Using the pipe (%>%), group the model and get the number of cars per model. Show codes and its result
+```{r}
+cars_per_model <- mpg %>%
+  group_by(model) %>%
+  summarise(num_cars = n())
+
+print(cars_per_model)
+```
+4a. Plot using geom_bar() using the top 20 observations only. The graphs shoudl have a title, labels and colors. Show code and results.
+```{r}
+top_20_data <- head(mpg[order(mpg$year, decreasing = TRUE), ], 20)
+
+ggplot(top_20_data, aes(x = model)) +
+  geom_bar(fill = "pink", color = "black") +
+  labs(title = "Top 20 Observations: Number of Cars per Model",
+       x = "Model", y = "Number of Cars") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+#4b.  Plot using the geom_bar() + coord_flip() just like what is shown below. Show codes and its result.
+```{r}
+ggplot(top_20_data, aes(y = model)) +
+  geom_bar(fill = "violet", color = "black") +
+  labs(title = "Top 20 Observations: Number of Cars per Model",
+       x = "Number of Cars", y = "Model") +
+  coord_flip() +
+  theme(axis.text.y = element_text(angle = 45, hjust = 1))
+```
+5. Plot the relationship between cyl - number of cylinders and displ - engine displacement using
+geom_point with aesthetic color = engine displacement. Title should be “Relationship between No. of Cylinders and Engine Displacement”.
+```{r}
+ggplot(mpg, aes(x = cyl, y = displ, color = displ)) +
+  geom_point() +
+  labs(title = "Relationship between No. of Cylinders and Engine Displacement",
+       x = "Number of Cylinders", y = "Engine Displacement") +
+  scale_color_gradient(low = "yellow", high = "#C20030") +
+  theme_minimal()
+```
+5a.  How would you describe its relationship? Show the codes and its result.
+```{r}
+# It will generate a scatter plot showing the relationship between the number of cylinders and engine displacement. The color of each point represents the corresponding engine displacement. 
+
+# As the number of cylinders increases, the engine displacement tends to increase as well. This suggests that there is a tendency for larger engines with more cylinders to have greater displacement.
 
 ```
 
+6. Plot the relationship between displ (engine displacement) and hwy(highway miles per gallon). Mapped it with a continuous variable you have identified in #1-c. What is its result? Why it produced such output?
+```{r}
+displ_hwy_plot <- ggplot(mpg, aes(x = displ, y = hwy, color = cty)) +
+  geom_point() +
+  labs(title = "Relationship between Engine Displacement and Highway MPG",
+       x = "Engine Displacement",
+       y = "Highway MPG")
+
+displ_hwy_plot
+
+# This is a scatterplot with engine displacement on the x-axis and highway miles per gallon on the y-axis. The color of each point represents the corresponding city fuel economy.
+
+# Using this plot, we can understand the relationship between the displ, hwy, and cty. By mapping the color to cty, we can visually analyze how different levels of city fuel economy relate to displ and hwy.
+
+# This can provide understanding of the fuel efficiency of vehicle with different engine sizes
+```
+6. Import the traffic.csv onto your R environment.
+```{r}
+library(readr)
+traffic <- read_csv("traffic.csv")
+traffic
+
+
+num_obs <- nrow(traffic)
+num_obs
+
+num_vars <- ncol(traffic)
+num_vars
+
+vars <- colnames(traffic)
+vars
+```
+6a. How many numbers of observation does it have? What are the variables of the traffic dataset the Show your answer.
+```{r}
+num_obs <- nrow(traffic)
+num_obs
+
+num_vars <- ncol(traffic)
+num_vars
+
+vars <- colnames(traffic)
+vars
+```
+6b. subset the traffic dataset into junctions. What is the R codes and its output?
+```{r}
+junctions_subset_1 <- subset(traffic, Junction == 1)
+
+junctions_subset_2 <- subset(traffic, Junction == 2)
+
+junctions_subset_3 <- subset(traffic, Junction == 3)
+
+junctions_subset_4 <- subset(traffic, Junction == 4)
+```
+6c. Plot each junction in a using geom_line(). Show your solution and output.
+```{r}
+
+```
+#7. From alexa_file.xlsx, import it to your environment
+```{r}
+library(readxl)
+alexa_file <- read_excel("alexa_file.xlsx")
+alexa_file
+```
+7a. How many observations does alexa_file has? What about the number of columns? Show your solution
+and answer.
+```{r}
+number_obs <- nrow(alexa_file)
+number_obs
+
+number_cols <- ncol(alexa_file)
+number_cols
+```
+7b. group the variations and get the total of each variations. Use dplyr package. Show solution and
+answer.
+```{r}
+groupA <- alexa_file %>%
+  group_by(variation) %>%
+  summarise(totalcount_=n())
+groupA
+```
+7c. Plot the variations using the ggplot() function. What did you observe? Complete the details of the graph. Show solution and answer.
+```{r}
+library(ggplot2)
+
+ggplot(alexa_file, aes(x = variation)) +
+  geom_bar() +
+  labs(title = "Distribution of Variations",
+       x = "Variation",
+       y = "Count") +
+  theme_minimal()
+```
+7d. Plot a geom_line() with the date and the number of verified reviews. Complete the details of the
+graphs. Show your answer and solution.
+```{r}
+alexa_file$date <- as.Date(alexa_file$date)
+
+alexa_file$month <- format(alexa_file$date, "%m")
+
+monthscount <- alexa_file %>%
+  group_by(month) %>%
+  summarise(num_reviews = n())
+
+
+monthlyreview <- table(monthscount)
+
+ggplot(monthscount, aes(x = month, y = num_reviews, group = 1)) +
+  geom_line(color = "blue") +
+  labs(title = "Number of Verified Reviews Per Month",
+       x = "Month of 2017", y = "Number of Reviews")
+```
+
+7e. Get the relationship of variations and ratings. Which variations got the most highest in rating? Plot a graph to show its relationship. Show your solution and answer.
+```{r}
+library(dplyr)
+variation_ratings <- alexa_file %>%
+  group_by(variation) %>%
+  summarise(avg_rating = mean(rating))
+
+variation_ratings
+
+highest_ratings <- variation_ratings %>%
+  filter(avg_rating == max(avg_rating))
+
+highest_ratings 
+
+# The walnut finish variation has the highest rating
+
+ggplot(variation_ratings, aes(x = variation, y = avg_rating)) +
+  geom_bar(stat = "identity", fill = "blue") +
+  labs(title = "Average Ratings by Variation",
+       x = "Variation",
+       y = "Average Rating")
+
+
+```
