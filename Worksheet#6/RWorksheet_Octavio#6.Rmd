@@ -1,0 +1,246 @@
+---
+title: "RWorksheet_6"
+author: "Jessa Octavio"
+date: "2023-12-22"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+1. Create a data frame for the table below. Show your solution.
+
+```{r}
+Student_score <- data.frame(
+  Student = c(1:10),
+  Pre_test = c(55,54,47,57,51,61,57,54,63,58),
+  Post_test = c(61,60,56,63,56,63,59,56,62,61)
+)
+Student_score
+
+names(Student_score) <- c("Student","Pre-test","Post-test")
+```
+
+1a. Compute the descriptive statistics using different packages (Hmisc and pastecs).
+Write the codes and its result.
+```{r}
+install.packages("Hmisc")
+install.packages("pastecs")
+
+library(Hmisc)
+library(pastecs)
+
+
+describe(Student_score)
+
+
+
+stat.desc(Student_score)
+
+```
+
+2. The Department of Agriculture was studying the effects of several levels of a fertilizer
+on the growth of a plant. For some analyses, it might be useful to convert the fertilizer
+levels to an ordered factor.
+
+• The data were 10,10,10, 20,20,50,10,20,10,50,20,50,20,10.
+```{r}
+fertilizer_lvl <- c(10,10,10, 20,20,50,10,20,10,50,20,50,20,10)
+
+ordered_lvl <- ordered(fertilizer_lvl, levels = c(10,20,50))
+
+ordered_lvl
+
+# The numbers inside the square brackets represent the observations or data points and below it are the levels. The arrow is the one that indicates the order from 10 less than to 20 and 20 less than to 50.
+```
+
+3. Abdul Hassan, president of Floor Coverings Unlimited, has asked you to study the ex-
+ercise levels undertaken by 10 subjects were “l”, “n”, “n”, “i”, “l” , “l”, “n”,
+“n”, “i”, “l” ; n=none, l=light, i=intense
+a. What is the best way to represent this in R?
+```{r}
+
+lvlExercise <- c("n", "l", "n", "n", "l", "l", "n", "n", "i", "l")
+factoredLvlExercise <- factor(lvlExercise, levels = c("n","l","i"))
+
+summaryExercise <- summary(factoredLvlExercise)
+summaryExercise
+
+```
+
+4. Sample of 30 tax accountants from all the states and territories of Australia and their individual state of origin is specified by a character vector of state mnemonics as:
+```{r}
+state <- c("tas", "sa", "qld", "nsw", "nsw", "nt", "wa", "wa", "qld",
+"vic", "nsw", "vic", "qld", "qld", "sa", "tas", "sa", "nt",
+"wa", "vic", "qld", "nsw", "nsw", "wa", "sa", "act", "nsw",
+"vic", "vic", "act")
+
+state_factor <- factor(state, levels = c("act", "nsw", "nt", "qld", "sa", "tas", "vic", "wa"))
+
+state_factor
+
+#The levels are listed below the number that is enclosed in square brackets and represents the observations. The levels correspond to the designated Australian geographical regions.
+```
+
+5. From #4 - continuation:
+• Suppose we have the incomes of the same tax accountants in another vector (in suitably
+large units of money)
+
+a. Calculate the sample mean income for each state we can now use the special function tapply():
+```{r}
+incomes <- c(60, 49, 40, 61, 64, 60, 59, 54,
+62, 69, 70, 42, 56, 61, 61, 61, 58, 51, 48,
+65, 49, 49, 41, 48, 52, 46, 59, 46, 58, 43)
+
+incmeans <- tapply(incomes, state_factor, mean)
+incmeans
+
+#b. Copy the results and 
+
+ #act      nsw       nt      qld       sa      tas      vic       wa 
+ #44.50000 57.33333 55.50000 53.60000 55.00000 60.50000 56.00000 52.25000 
+
+#The average income for each state is included in this output. Additionally, each name corresponds to a state_Factor factor level. 
+
+```
+
+6. Calculate the standard errors of the state income means (refer again to number 3)
+
+stdError <- function(x) sqrt(var(x)/length(x))
+Note: After this assignment, the standard errors are calculated by:
+incster <- tapply(incomes, statef, stdError)
+
+a. What is the standard error? Write the codes.
+```{r}
+stdError <- function(x) sqrt(var(x)/length(x))
+incster <- tapply(incomes, state_factor, stdError)
+incster
+
+standardError <- tapply(incomes, state_factor, stdError)
+standardError
+```
+
+
+b. Interpret the result.
+
+#Here, we compute the standard error of each state, whereas in # 5. we observe the means of each state.
+
+#A measure of the uncertainty surrounding the sample mean incomes for each state is given by the standard errors. Greater diversity in the estimates is suggested by higher standard errors, whereas lower standard errors indicate more accurate estimates. 
+
+
+7. Use the titanic dataset.
+a. subset the titatic dataset of those who survived and not survived. Show the codes
+and its result.
+
+```{r}
+install.packages("titanic")
+library(titanic)
+
+data("titanic_train")
+
+survived <- subset(titanic_train, Survived == 1)
+
+not_survived <- subset(titanic_train, Survived == 0)
+
+head(survived)
+head(not_survived)
+```
+8. 
+```{r}
+breastcancer <- read.csv("breastcancer_wisconsin.csv")
+breastcancer
+
+str(breastcancer)
+head(breastcancer)
+summary(breastcancer)
+
+#the dataset is about the data of the breast cancer.
+```
+
+
+8. The data sets are about the breast cancer Wisconsin. The samples arrive periodically
+as Dr. Wolberg reports his clinical cases. The database therefore reflects this chronologihttps://drive.google.com/file/d/16MFLoehCgx2MJuNSAuB2CsBy6eDIIr-
+u/view?usp=drive_link)
+
+Note Kindly click on the word BreastCancer to download the dataset.
+a. describe what is the dataset all about.
+
+install.packages("psych")
+library(psych)
+
+clump_thickness <- breastcancer_data$ClumpThickness
+marginal_adhesion <- breastcancer_data$MarginalAdhesion
+bare_nuclei <- breastcancer_data$BareNuclei
+bland_chromatin <- breastcancer_data$BlandChromatin
+uniformity_cell_shape <- breastcancer_data$UniformityCellShape
+
+```{r}
+
+library(readr)
+library(pastecs)
+library(Hmisc)
+
+breastCancer <- read.csv("breastcancer_wisconsin.csv")
+breastCancer
+
+breastCancerStats <- stat.desc(breastCancer)
+breastCancerStats
+
+clump_thickness_SEmean <- breastCancerStats["SE.mean", "clump_thickness"]
+clump_thickness_SEmean
+
+marginal_adhesion_coefVar <- breastCancerStats["coef.var", "marginal_adhesion"]
+marginal_adhesion_coefVar
+
+bare_nucleoli_null <- breastCancerStats["nbr.null", "bare_nucleoli"]
+bare_nucleoli_null
+
+bland_chromatin_mean <- breastCancerStats["mean", "bland_chromatin"]
+bland_chromatin_mean
+
+bland_chromatin_std_dev <- breastCancerStats["std.dev", "bland_chromatin"]
+bland_chromatin_std_dev
+
+shape_uniformity_CImean <- breastCancerStats["CI.mean", "shape_uniformity"]
+shape_uniformity_CImean
+
+
+```
+```{r}
+#d. How many attributes?
+
+num_attributes <- ncol(breastCancer)
+num_attributes
+```
+e. Find the percentage of respondents who are malignant. Interpret the results.
+
+```{r}
+
+# Assuming class 4 is malignant
+
+percentage_malignant <- (sum(breastCancer$class == 4) / nrow(breastCancer)) * 100
+paste0("Percentage of Respondents who are Malignant: ", percentage_malignant,"%")
+
+```
+
+9.Export the data abalone to the Microsoft excel file. Copy the codes.
+```{r, error=TRUE}
+install.packages("AppliedPredictiveModeling")
+library(AppliedPredictiveModeling)
+
+data("abalone")
+
+install.packages("openxlsx")
+
+
+library(openxlsx)
+
+write.xlsx(abalone, file = "abalone.xlsx")
+
+View(abalone)
+head(abalone)
+summary(abalone)
+
+```
